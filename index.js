@@ -4,6 +4,7 @@ const Intercom = require("intercom-client");
 
 const client = new Intercom.Client({token: process.env.INTERCOM_TOKEN});
 const app = express();
+app.set('view engine', 'pug');
 
 
 var admins = []
