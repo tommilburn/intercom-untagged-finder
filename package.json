@@ -19,6 +19,7 @@
   "dependencies": {
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
-    "intercom-client": "^2.9.4"
+    "intercom-client": "^2.9.4",
+    "pug": "^2.0.3"
   }
 }

@@ -18,7 +18,7 @@ function parseAdmins(err, data){
 }
 
 app.get('/', function(req, res) {
-  res.send('hello world');
+  res.render('admins', {admins: admins});
 });
 
 app.listen(3000, () => console.log('listening on port 3000'))
