@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/tommilburn/intercom-untagged-finder/issues"
   },
-  "homepage": "https://github.com/tommilburn/intercom-untagged-finder#readme"
+  "homepage": "https://github.com/tommilburn/intercom-untagged-finder#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "intercom-client": "^2.9.4"
+  }
 }
