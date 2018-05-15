@@ -1,0 +1,19 @@
+{
+  "name": "intercom-untagged-finder",
+  "version": "0.1.0",
+  "description": " Find conversations you didn't tag! ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tommilburn/intercom-untagged-finder.git"
+  },
+  "author": "tom milburn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tommilburn/intercom-untagged-finder/issues"
+  },
+  "homepage": "https://github.com/tommilburn/intercom-untagged-finder#readme"
+}
