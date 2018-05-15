@@ -18,6 +18,7 @@
   "homepage": "https://github.com/tommilburn/intercom-untagged-finder#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "express": "^4.16.3",
     "intercom-client": "^2.9.4"
   }
 }
