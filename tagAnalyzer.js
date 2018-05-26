@@ -1,74 +1,59 @@
 module.exports = TagAnalyzer
+const Bottleneck = require('bottleneck');
+
+const limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 200
+});
 
 function TagAnalyzer(client, admin){
 
   var client = client;
   var admin = admin;
-  var allConversations = [];
+  var allClosedConversations = [];
   var totalPages = 0
   var currentPage = 0;
 
-  requestConversations = function(){
-    console.log('fetching all conversations');
-    client.conversations.list({type: 'admin', admin_id: admin, open: false, per_page: 50}, function(err, data){
-      if(err){
-        console.log(err.body.errors);
-      } else {
-        parseConversationPage(data.body.conversations);
-        client.nextPage(data.body.pages, requestConversationPage);
-      }
-    });
-  }
-
-  requestConversationPage = function(data){
-    parseConversationPage(data.body.conversations);
-
-    if(data.body.pages && data.body.pages.next){
-      console.log("getting page " + data.body.pages.page + " of " + data.body.pages.total_pages)
-      console.log(data.body.conversations.length);
-      currentPage = data.body.pages.page;
-      totalPages = data.body.pages.total_pages
-      setTimeout(function(){
-        client.nextPage(data.body.pages, requestConversationPage);
-      }, (100))
+  requestConversationPage = function(err, currentPage){
+    if(err){
+      console.log(err);
+      return;
+    }
+    if(currentPage && currentPage.body.pages){ //on a page, more pages exist
+      console.log("on page: " + currentPage.body.pages.page + " total: " + allClosedConversations.length);
+      parseConversationPage(currentPage.body.conversations)
+      limiter.schedule(() => client.nextPage(currentPage.body.pages, requestConversationPage, undefined));
     } else {
       console.log("done");
     }
   }
+  
 
   parseConversationPage = function(newConversations){
-    for(i in newConversations){
-      var conversation = newConversations[i];
-      console.log(conversation.id + " " + 25 * i);
+    for (c in newConversations){
+      allClosedConversations[newConversations[c].id] = newConversations[c];
+      limiter.schedule(requestConversationTags, newConversations[c]);
+    }
+  }
 
-      (function getConversationTags (i, newConversations) {
-        setTimeout(function() {
-          var conversation = newConversations[i];
-          client.conversations.find({id:conversation.id}, function(err, data){
-            if(err){
-              conversation.tags = err;
-            } else {
-              console.log(data.body.tags.tags);
-              conversation.tags = data.body.tags.tags
-            }
-          });
-          if (--i) {          // If i > 0, keep going
-            getConversationTags(i);       // Call the loop again, and pass it the current value of i
-          } else {
-            console.log("pushing array");
-            Array.prototype.push.apply(allConversations, newConversations)
-          }
-        }, 3000);
-      })(newConversations.length - 1, newConversations);
+  requestConversationTags = function(conversation){
+    console.log(conversation.id);
+    client.conversations.find({ id: conversation.id }, parseConversationTags);
+  }
 
-    }    
+  parseConversationTags = function(err, conversationInformation){
+    console.log(conversationInformation.body.tags)
+    var id = conversationInformation.body.id
+    var tags = conversationInformation.body.tags
+    allClosedConversations[id].tags = tags;
   }
 
   this.allConversations = function(){
-    return allConversations;
+    console.log("all closed " + Object.keys(allClosedConversations).length)
+    return allClosedConversations;
   }
 
-  requestConversations();
+  client.conversations.list({type: 'admin', admin_id: admin, open: false}, requestConversationPage);
 }
 
 

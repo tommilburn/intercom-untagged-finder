@@ -32,8 +32,9 @@ app.get('/conversations/:adminid', function(req, res) {
       console.log("requesting tags for " + req.params.adminid)
       admins[req.params.adminid].conversations = new tagAnalyzer(client, req.params.adminid)
     }
-
-    res.render('conversations', {title: admins[req.params.adminid], conversations: admins[req.params.adminid].conversations.allConversations()})
+    var allConverations = admins[req.params.adminid].conversations.allConversations();
+    var taggedConversations = allConverations.filter(c => c.tags.length == 0);
+    res.render('conversations', {title: admins[req.params.adminid], conversations: taggedConversations})
   } else {
     res.send('uh oh <a href="/">back</a>');
   }

@@ -12,10 +12,12 @@ html
         tr
           th User
           th Tags
-        each index in conversations
+        each index in Object.keys(conversations)
           tr
             td 
               a(href="https://app.intercom.io/a/apps/mbz4oxgz/inbox/inbox/1894039/conversations/"+index.id) 
-                code #{index.id}
-            td #{JSON.stringify(index.tags)}
+                code #{conversations[index].id}
+            - var tagCount = conversations[index].tags
+            - tagCount = tagCount.tags.length
+            td #{tagCount}
       a(href="/") back
