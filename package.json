@@ -20,9 +20,9 @@
     "bottleneck": "^2.3.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
-    "intercom-client": "^2.9.4",
-    "npm": "^6.1.0",
+    "intercom-client": "^2.10.6",
+    "npm": "^6.10.1",
     "promise": "^8.0.1",
-    "pug": "^2.0.3"
+    "pug": "^2.0.4"
   }
 }
